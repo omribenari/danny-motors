@@ -84,17 +84,16 @@ class ServiceForm extends Component {
   handleSubmit = event => {
     event.preventDefault(); // <- prevent form submit from reloading the page
 
-
     this.setState({
       isSubmitting: true,
     });
 
     const user = fire.auth().currentUser;
-    if(!user) {
+    if (!user) {
       fire
         .auth()
         .signInAnonymously()
-        .catch(function(error) {
+        .catch(() => {
           alert('error connecting to server');
         });
     }
@@ -102,9 +101,9 @@ class ServiceForm extends Component {
     const data = this.getFormDataFromState();
     /* Send the form to Firebase */
     fire
-      .database()
-      .ref('guestServiceReq')
-      .push(data)
+      .firestore()
+      .collection('guestServiceReq')
+      .add(data)
       .then(this.handleSubmitSuccess)
       .catch(this.handleSubmitFailed);
   };
