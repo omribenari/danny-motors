@@ -160,11 +160,13 @@ class Header extends Component {
 
   render() {
     const { classes } = this.props;
+    const { openDrawer, user } = this.state;
     return (
       <div>
         <MenuDrawer
-          open={this.state.openDrawer}
+          open={openDrawer}
           toggleDrawer={this.toggleDrawer}
+          user={user}
         />
         <div className={classes.appbarWrapper}>
           <AppBar position="static">

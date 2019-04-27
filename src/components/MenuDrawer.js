@@ -6,7 +6,7 @@ import ListItem from '@material-ui/core/ListItem';
 import { Link } from 'react-router-dom';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Face, Home, EventAvailable, School } from '@material-ui/icons';
+import { Face, Home, EventAvailable, School, DirectionsCar } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core';
 
 const menuItems = [
@@ -32,19 +32,44 @@ const menuItems = [
   },
 ];
 
+const menuItemsAuth = [
+  {
+    icon: <Home />,
+    text: 'Home',
+    url: '/',
+  },
+  {
+    icon: <DirectionsCar />,
+    text: 'My account',
+    url: '/account-summary',
+  },
+  {
+    icon: <School />,
+    text: 'Terms of service',
+    url: '/tos',
+  },
+  {
+    icon: <Face />,
+    text: 'About',
+    url: '/about',
+  },
+];
+
 const styles = () => ({
   sideListWrapper: {},
 });
 
 const MenuDrawer = props => {
-  const { classes, toggleDrawer, open } = props;
+  const { classes, toggleDrawer, open, user } = props;
+
+  const items = (user && !user.isAnonymous) ? menuItemsAuth : menuItems;
 
   return (
     <Drawer open={open} onClose={toggleDrawer(false)}>
       <div tabIndex={0} role="button">
         <div className={classes.sideListWrapper}>
           <List>
-            {menuItems.map(item => (
+            {items.map(item => (
               <ListItem
                 key={item.text}
                 button
