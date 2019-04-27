@@ -7,6 +7,7 @@ import AboutPage from './AboutPage';
 import HomePage from './HomePage';
 import ServiceReqPage from "./ServiceReqPage";
 import TermsOfServicePage from "./TermsOfServicePage";
+import AccountSummary from "./AccountSummary";
 
 class App extends React.Component {
   render() {
@@ -18,6 +19,7 @@ class App extends React.Component {
           <Route path="/about" component={AboutPage} />
           <Route path="/service-req" component={ServiceReqPage} />
           <Route path="/tos" component={TermsOfServicePage} />
+          <Route path="/Account-summary" component={AccountSummary} />
           <Route component={NotFoundPage} />
         </Switch>
       </Router>

@@ -10,8 +10,10 @@ import MenuDrawer from './MenuDrawer';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import fire from '../fire';
-import * as firebase from "firebase";
-import Avatar from "@material-ui/core/Avatar";
+import * as firebase from 'firebase';
+import Avatar from '@material-ui/core/Avatar';
+import { Link } from 'react-router-dom';
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const styles = () => ({
   appbarWrapper: {
@@ -36,19 +38,23 @@ class Header extends Component {
       openDrawer: false,
       anchorEl: null,
       user: null,
+      isAuthenticating: false,
     };
 
-    fire.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        // User is signed in.
-        this.setState({ user });
-      } else {
-        // User is signed out.
-        this.setState({ user: null });
-      }
-    }.bind(this));
+    fire.auth().onAuthStateChanged(
+      function(user) {
+        if (user) {
+          // User is signed in.
+          this.setState({ user });
+        } else {
+          // User is signed out.
+          this.setState({ user: null });
+        }
+      }.bind(this),
+    );
 
     this.handleLogout = this.handleLogout.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
   }
 
   handleMenu = event => {
@@ -66,12 +72,21 @@ class Header extends Component {
   };
 
   handleLogin() {
+    this.setState({
+      isAuthenticating: true,
+    });
+
     let provider = new firebase.auth.GoogleAuthProvider();
     fire
       .auth()
       .signInWithRedirect(provider)
       .catch(error => {
         alert('error in google authentication');
+      })
+      .then(() => {
+        this.setState({
+          isAuthenticating: false,
+        });
       });
   }
 
@@ -87,9 +102,12 @@ class Header extends Component {
 
   renderUserActionMenu = () => {
     const { classes } = this.props;
-    const { anchorEl, user } = this.state;
+    const { anchorEl, user, isAuthenticating } = this.state;
     const openUserMenu = Boolean(anchorEl);
 
+    if(isAuthenticating){
+      return <CircularProgress className={classes.progress} color="secondary" />;
+    }
     return user && !user.isAnonymous ? (
       <div>
         <Button
@@ -98,9 +116,15 @@ class Header extends Component {
           onClick={this.handleMenu}
           color="inherit"
         >
-          {user.photoURL ?
-            <Avatar alt={user.displayName} src={user.photoURL} className={classes.avatar} />
-            :<AccountCircle className={classes.avatar}/>}
+          {user.photoURL ? (
+            <Avatar
+              alt={user.displayName}
+              src={user.photoURL}
+              className={classes.avatar}
+            />
+          ) : (
+            <AccountCircle className={classes.avatar} />
+          )}
           {user.displayName}
         </Button>
         <Menu
@@ -117,7 +141,13 @@ class Header extends Component {
           open={openUserMenu}
           onClose={this.handleClose}
         >
-          <MenuItem onClick={this.handleClose}>My account</MenuItem>
+          <MenuItem
+            onClick={this.handleClose}
+            component={Link}
+            to="/Account-summary"
+          >
+            My account
+          </MenuItem>
           <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
         </Menu>
       </div>
