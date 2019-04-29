@@ -9,7 +9,7 @@ const config = {
 };
 
 export const collections = {
-  CAR_MAKE: 'CarMake',
+  CAR_MAKE: 'CarsMake',
   USERS_INFO: 'UsersInfo',
   GUEST_SERVICE_REQ: 'guestServiceReq',
 };

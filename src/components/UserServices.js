@@ -1,34 +1,67 @@
-import React from 'react';
+import React, {Fragment, useState} from 'react';
 import PropTypes from 'prop-types';
 import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
+import {AppBar} from "@material-ui/core";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
+import {Add as AddIcon} from "@material-ui/icons";
+import AddServiceDialog from "./AddServiceDialog";
 
-const styles = () => ({
-  root: {
-    flexGrow: 1
-  },
+const styles = theme => ({
   paper: {
-    padding: 30,
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
     margin: 30,
-  }
+  },
+  content: {
+    padding: 30,
+  },
+  fab: {
+    position: 'absolute',
+    bottom: theme.spacing.unit * 2,
+    right: theme.spacing.unit * 2,
+  },
+  grow: {
+    flexGrow: 1,
+  },
 });
 
 const UserServices = props => {
-  const { classes, services } = props;
+  const { classes, services, cars } = props;
+  const [open, setOpen] = useState(false);
 
   return (
-    <div className={classes.root}>
-      <Paper elevation={1}  className={classes.paper}>
-        UserServices
+    <Fragment>
+      <Paper elevation={1} className={classes.paper}>
+        <AppBar position="static" color="default">
+          <Toolbar>
+            <Typography variant="h6" color="inherit" className={classes.grow}>
+              Services
+            </Typography>
+            <Tooltip title="Add new service request">
+              <IconButton aria-label="Service request" onClick={() => setOpen(true)}>
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
+          </Toolbar>
+        </AppBar>
+        <div className={classes.content}>
+          {services.length}
+        </div>
       </Paper>
-      {services.length}
-    </div>
+      <AddServiceDialog open={open} handleClose={() => setOpen(false)} cars={cars}/>
+    </Fragment>
   );
 };
 
 UserServices.propTypes = {
   classes: PropTypes.object.isRequired,
   services: PropTypes.array.isRequired,
+  cars: PropTypes.array.isRequired,
 };
 
 export default withStyles(styles)(UserServices);

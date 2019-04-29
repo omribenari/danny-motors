@@ -56,7 +56,7 @@ class AccountSummary extends Component {
       <div className={classes.root}>
         <div className={classes.cardsRow}>
           <UserCars className={classes.card} cars={cars} />
-          <UserServices className={classes.card} services={services} />
+          <UserServices className={classes.card} services={services} cars={cars} />
         </div>
       </div>
     );
