@@ -9,11 +9,11 @@ import { withStyles } from '@material-ui/core';
 import MenuDrawer from './MenuDrawer';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import fire from '../fire';
+import fire, { collections } from '../fire';
 import * as firebase from 'firebase';
 import Avatar from '@material-ui/core/Avatar';
 import { Link } from 'react-router-dom';
-import CircularProgress from "@material-ui/core/CircularProgress";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = () => ({
   appbarWrapper: {
@@ -46,6 +46,7 @@ class Header extends Component {
         if (user) {
           // User is signed in.
           this.setState({ user });
+          this.insertUserInfo(user);
         } else {
           // User is signed out.
           this.setState({ user: null });
@@ -56,6 +57,26 @@ class Header extends Component {
     this.handleLogout = this.handleLogout.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
   }
+
+  insertUserInfo = user => {
+    let docRef = fire
+      .firestore()
+      .collection(collections.USERS_INFO)
+      .doc(user.uid);
+
+    docRef.get().then(docSnapshot => {
+      if (!docSnapshot.exists) {
+        docRef
+          .set({
+            Cars: [],
+            Services: [],
+          })
+          .catch(error => {
+            console.log(error.message);
+          });
+      }
+    });
+  };
 
   handleMenu = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -105,8 +126,10 @@ class Header extends Component {
     const { anchorEl, user, isAuthenticating } = this.state;
     const openUserMenu = Boolean(anchorEl);
 
-    if(isAuthenticating){
-      return <CircularProgress className={classes.progress} color="secondary" />;
+    if (isAuthenticating) {
+      return (
+        <CircularProgress className={classes.progress} color="secondary" />
+      );
     }
     return user && !user.isAnonymous ? (
       <div>

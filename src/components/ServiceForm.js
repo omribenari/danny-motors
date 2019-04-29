@@ -9,7 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-import fire from '../fire';
+import fire, {collections} from '../fire';
 
 const styles = theme => ({
   container: {
@@ -102,7 +102,7 @@ class ServiceForm extends Component {
     /* Send the form to Firebase */
     fire
       .firestore()
-      .collection('guestServiceReq')
+      .collection(collections.GUEST_SERVICE_REQ)
       .add(data)
       .then(this.handleSubmitSuccess)
       .catch(this.handleSubmitFailed);

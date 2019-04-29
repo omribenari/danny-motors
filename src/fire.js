@@ -7,5 +7,12 @@ const config = {
   storageBucket: "garage-manager-d7d68.appspot.com",
   messagingSenderId: "441236782711"
 };
+
+export const collections = {
+  CAR_MAKE: 'CarMake',
+  USERS_INFO: 'UsersInfo',
+  GUEST_SERVICE_REQ: 'guestServiceReq',
+};
+
 const fire = firebase.initializeApp(config);
 export default fire;
