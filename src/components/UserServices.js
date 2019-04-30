@@ -1,14 +1,17 @@
-import React, {Fragment, useState} from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
-import Paper from "@material-ui/core/Paper";
-import withStyles from "@material-ui/core/styles/withStyles";
-import {AppBar} from "@material-ui/core";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from "@material-ui/core/IconButton";
-import {Add as AddIcon} from "@material-ui/icons";
-import AddServiceDialog from "./AddServiceDialog";
+import Paper from '@material-ui/core/Paper';
+import withStyles from '@material-ui/core/styles/withStyles';
+import { AppBar } from '@material-ui/core';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import { Add as AddIcon } from '@material-ui/icons';
+import AddServiceDialog from './AddServiceDialog';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ServiceCard from "./ServiceCard";
 
 const styles = theme => ({
   paper: {
@@ -43,17 +46,28 @@ const UserServices = props => {
               Services
             </Typography>
             <Tooltip title="Add new service request">
-              <IconButton aria-label="Service request" onClick={() => setOpen(true)}>
+              <IconButton
+                aria-label="Service request"
+                onClick={() => setOpen(true)}
+              >
                 <AddIcon />
               </IconButton>
             </Tooltip>
           </Toolbar>
         </AppBar>
-        <div className={classes.content}>
-          {services.length}
-        </div>
+        <List className={classes.content}>
+          {services.map(service => (
+            <ListItem alignItems="flex-start" key={service.LicensePlate}>
+              <ServiceCard service={service} />
+            </ListItem>
+          ))}
+        </List>
       </Paper>
-      <AddServiceDialog open={open} handleClose={() => setOpen(false)} cars={cars}/>
+      <AddServiceDialog
+        open={open}
+        handleClose={() => setOpen(false)}
+        cars={cars}
+      />
     </Fragment>
   );
 };

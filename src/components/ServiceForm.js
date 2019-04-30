@@ -4,12 +4,15 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { Typography } from '@material-ui/core';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import HelpIcon from './HelpIcon';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-import fire, {collections} from '../fire';
+import fire, { collections } from '../fire';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const styles = theme => ({
   container: {
@@ -23,6 +26,9 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
+    marginTop: theme.spacing.unit*2,
+    marginBottom: theme.spacing.unit,
+    minWidth: 200,
   },
   dense: {
     marginTop: 19,
@@ -44,16 +50,29 @@ class ServiceForm extends Component {
       carModel: '',
       carYear: '',
       carKm: '',
-      carVin: '',
+      carLP: '',
       notes: '',
       checkedTos: false,
       isAnonymous: undefined,
       uid: undefined,
+      carsData: [],
+      makeModels: [],
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSubmitSuccess = this.handleSubmitSuccess.bind(this);
     this.handleSubmitFailed = this.handleSubmitFailed.bind(this);
+    this.handleCarMakeChange = this.handleCarMakeChange.bind(this);
+  }
+
+  componentWillMount() {
+    fire
+      .firestore()
+      .collection(collections.CAR_MAKE)
+      .get()
+      .then(querySnapshot => {
+        this.setState({ carsData: querySnapshot.docs.map(doc => doc.data()) });
+      });
   }
 
   clearForm() {}
@@ -61,8 +80,7 @@ class ServiceForm extends Component {
   getFormDataFromState() {
     return {
       client: {
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
+        name: this.state.name,
         email: this.state.email,
         phone: this.state.phone,
       },
@@ -71,7 +89,7 @@ class ServiceForm extends Component {
         Model: this.state.carModel,
         Year: this.state.carYear,
         Km: this.state.carKm,
-        VIN: this.state.carVin,
+        LicensePlate: this.state.carLP,
       },
       notes: this.state.notes,
     };
@@ -122,9 +140,27 @@ class ServiceForm extends Component {
     });
   }
 
+  handleCarMakeChange(event) {
+    const value = event.target.value;
+    this.setState({
+      carMake: value,
+    });
+    const make = this.state.carsData.find(m => m.Name === value);
+    if (make) {
+      this.setState({ makeModels: make.Models });
+    }
+  }
+
   render() {
     const { classes } = this.props;
-    const { isSubmitting, isComplete } = this.state;
+    const {
+      isSubmitting,
+      isComplete,
+      carMake,
+      carModel,
+      carsData,
+      makeModels,
+    } = this.state;
 
     if (isComplete) {
       return <div>done</div>;
@@ -140,20 +176,11 @@ class ServiceForm extends Component {
         <div className={classes.formRow}>
           <TextField
             required
-            id="first-name"
-            label="First name"
+            id="full-name"
+            label="Full name"
             className={classes.textField}
-            onChange={this.handleChange('firstName')}
-            value={this.state.firstName}
-            margin="normal"
-          />
-          <TextField
-            required
-            id="last-name"
-            label="Last name"
-            className={classes.textField}
-            onChange={this.handleChange('lastName')}
-            value={this.state.lastName}
+            onChange={this.handleChange('name')}
+            value={this.state.name}
             margin="normal"
           />
           <TextField
@@ -181,24 +208,41 @@ class ServiceForm extends Component {
         </div>
         <Typography variant={'subtitle2'}>Car details</Typography>
         <div className={classes.formRow}>
-          <TextField
-            required
-            id="car-make"
-            label="Make"
-            className={classes.textField}
-            onChange={this.handleChange('carMake')}
-            value={this.state.carMake}
-            margin="normal"
-          />
-          <TextField
-            required
-            id="car-model"
-            label="Model"
-            className={classes.textField}
-            onChange={this.handleChange('carModel')}
-            value={this.state.carModel}
-            margin="normal"
-          />
+          <FormControl className={classes.textField}>
+            <InputLabel htmlFor="service-req-car-make">Car make</InputLabel>
+            <Select
+              value={carMake}
+              onChange={this.handleCarMakeChange}
+              inputProps={{
+                name: 'selectedCarMake',
+                id: 'service-req-car-make',
+              }}
+            >
+              {carsData.map(item => (
+                <MenuItem key={item.Name} value={item.Name}>
+                  {item.Name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl className={classes.textField}>
+            <InputLabel htmlFor="service-req-car-model">Car model</InputLabel>
+            <Select
+              value={carModel}
+              onChange={this.handleChange('carModel')}
+              disabled={!carMake || carMake === ''}
+              inputProps={{
+                name: 'selectedModel',
+                id: 'service-req-car-model',
+              }}
+            >
+              {makeModels.map(item => (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <TextField
             required
             id="car-year"
@@ -224,21 +268,12 @@ class ServiceForm extends Component {
             }}
           />
           <TextField
-            id="car-vin"
-            label="VIN"
+            id="car-lp"
+            label="Licence plate"
             className={classes.textField}
-            onChange={this.handleChange('carVin')}
-            value={this.state.carVin}
+            onChange={this.handleChange('carLP')}
+            value={this.state.carLP}
             margin="normal"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <HelpIcon
-                    tooltip={`The car's vehicle identification number (VIN) is the identifying code for a SPECIFIC automobile. The VIN serves as the car's fingerprint, as no two vehicles in operation have the same VIN. A VIN is composed of 17 characters (digits and capital letters) that act as a unique identifier for the vehicle. A VIN displays the car's unique features, specifications and manufacturer. The VIN can be used to track recalls, registrations, warranty claims, thefts and insurance coverage.`}
-                  />
-                </InputAdornment>
-              ),
-            }}
           />
         </div>
         <TextField

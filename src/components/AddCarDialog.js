@@ -84,7 +84,6 @@ const AddCarDialog = props => {
   const handleCarMakeChange = event => {
     const value = event.target.value;
     setCarMake(value);
-    console.log();
     const make = carsData.find(m => m.Name === value);
     if(make){
       setMakeModels(make.Models);
