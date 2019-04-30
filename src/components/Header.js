@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = () => ({
-  appbarWrapper: {
+  appbarRoot: {
     flexGrow: 1,
   },
   iconButton: {
@@ -191,7 +191,7 @@ class Header extends Component {
           toggleDrawer={this.toggleDrawer}
           user={user}
         />
-        <div className={classes.appbarWrapper}>
+        <div className={classes.appbarRoot}>
           <AppBar position="static">
             <Toolbar>
               <IconButton

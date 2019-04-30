@@ -25,7 +25,7 @@ const styles = () => ({
   appMain: {
     display: 'flex',
     flexDirection: 'column',
-    flex: 1,
+    flexGrow: 1,
   },
 });
 
