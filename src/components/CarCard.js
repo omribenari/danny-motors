@@ -15,6 +15,7 @@ const styles = () => ({
   cover: {
     width: 150,
     height: 150,
+    objectFit: 'cover',
   },
 });
 
