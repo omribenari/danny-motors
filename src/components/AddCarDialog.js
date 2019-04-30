@@ -40,6 +40,7 @@ const AddCarDialog = props => {
   const [carYear, setCarYear] = useState('');
   const [carKm, setCarKm] = useState('');
   const [carLP, setCarLP] = useState('');
+  const [carImg, setCarImg] = useState('');
 
   useEffect(() => {
     fire
@@ -65,6 +66,7 @@ const AddCarDialog = props => {
           Year: carYear,
           Km: carKm,
           LicensePlate: carLP,
+          imgUrl: carImg,
         }),
       })
       .then(() => {
@@ -163,6 +165,14 @@ const AddCarDialog = props => {
             className={classes.textField}
             onChange={e => setCarLP(e.target.value)}
             value={carLP}
+            margin="normal"
+          />
+          <TextField
+            id="car-img-url"
+            label="Image url"
+            className={classes.textField}
+            onChange={e => setCarImg(e.target.value)}
+            value={carImg}
             margin="normal"
           />
         </form>
