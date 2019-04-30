@@ -9,24 +9,22 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import AddCarDialog from './AddCarDialog';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import CarCard from "./CarCard";
 
-const styles = theme => ({
+const styles = () => ({
   paper: {
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
     margin: 30,
   },
-  content: {
-    padding: 30,
-  },
-  fab: {
-    position: 'absolute',
-    bottom: theme.spacing.unit * 2,
-    right: theme.spacing.unit * 2,
-  },
   grow: {
     flexGrow: 1,
+  },
+  content: {
+    padding: 10,
   },
 });
 
@@ -49,11 +47,15 @@ const UserCars = props => {
             </Tooltip>
           </Toolbar>
         </AppBar>
-        <div className={classes.content}>
-          {cars.length}
-        </div>
+        <List className={classes.content}>
+          {cars.map(car => (
+            <ListItem alignItems="flex-start" key={car.LicensePlate}>
+              <CarCard car={car}/>
+            </ListItem>
+          ))}
+        </List>
       </Paper>
-      <AddCarDialog open={open} handleClose={() => setOpen(false)}/>
+      <AddCarDialog open={open} handleClose={() => setOpen(false)} />
     </Fragment>
   );
 };
