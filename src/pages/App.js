@@ -15,6 +15,7 @@ import TermsOfServicePage from './TermsOfServicePage';
 import AccountSummary from './AccountSummary';
 import fire from '../fire';
 import withStyles from '@material-ui/core/styles/withStyles';
+import LoginPage from "./LoginPage";
 
 const styles = () => ({
   appRoot: {
@@ -44,7 +45,7 @@ class App extends Component {
             ) : (
               <Redirect
                 to={{
-                  pathname: '/',
+                  pathname: '/login',
                   state: { from: props.location },
                 }}
               />
@@ -63,6 +64,7 @@ class App extends Component {
               <Route path="/about" component={AboutPage} />
               <Route path="/service-req" component={ServiceReqPage} />
               <Route path="/tos" component={TermsOfServicePage} />
+              <Route path="/login" component={LoginPage} />
               <PrivateRoute path="/account-summary" component={AccountSummary} />
               <Route component={NotFoundPage} />
             </Switch>
