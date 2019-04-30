@@ -23,6 +23,8 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
+    marginTop: theme.spacing.unit*2,
+    marginBottom: theme.spacing.unit,
   },
   dense: {
     marginTop: 19,
@@ -81,7 +83,7 @@ const AddServiceDialog = props => {
           autoComplete="off"
           className={classes.container}
         >
-          <FormControl className={classes.formControl}>
+          <FormControl className={classes.textField}>
             <InputLabel htmlFor="add-service-selected-car">Select car</InputLabel>
             <Select
               value={selectedCar}
@@ -96,7 +98,7 @@ const AddServiceDialog = props => {
               ))}
             </Select>
           </FormControl>
-          <FormControl className={classes.formControl}>
+          <FormControl className={classes.textField}>
             <InputLabel htmlFor="add-service-type">Service type</InputLabel>
             <Select
               value={serviceType}
@@ -122,7 +124,6 @@ const AddServiceDialog = props => {
               shrink: true,
             }}
           />
-
 
         </form>
       </DialogContent>
