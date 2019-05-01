@@ -5,15 +5,15 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import withStyles from '@material-ui/core/styles/withStyles';
-import fire, {collections} from '../fire';
 import * as firebase from 'firebase';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import ResponsiveDialog from "./ResponsiveDialog";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
+import ResponsiveDialog from './ResponsiveDialog';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import { FireCon } from '../common/FireCon';
 
 const styles = theme => ({
   container: {
@@ -23,7 +23,7 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    marginTop: theme.spacing.unit*2,
+    marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit,
   },
   dense: {
@@ -37,7 +37,7 @@ const serviceTypes = [
   'Balance Tires',
   'Adjust Brakes',
   'Air Conditioner Repair',
-  'Other Service'
+  'Other Service',
 ];
 
 const AddServiceDialog = props => {
@@ -50,12 +50,9 @@ const AddServiceDialog = props => {
   const saveCar = () => {
     setIsSaving(true);
 
-    fire
-      .firestore()
-      .collection(collections.USERS_INFO)
-      .doc(fire.auth().currentUser.uid)
+    FireCon.UserInfo()
       .update({
-        "Services": firebase.firestore.FieldValue.arrayUnion({
+        Services: firebase.firestore.FieldValue.arrayUnion({
           car: selectedCar,
           serviceType: serviceType,
         }),
@@ -64,7 +61,7 @@ const AddServiceDialog = props => {
         setIsSaving(false);
         handleClose();
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error.message);
         setIsSaving(false);
       });
@@ -76,15 +73,15 @@ const AddServiceDialog = props => {
       onClose={handleClose}
       aria-labelledby="New service request"
     >
-      <DialogTitle id="responsive-dialog-title">{'New service request'}</DialogTitle>
+      <DialogTitle id="responsive-dialog-title">
+        {'New service request'}
+      </DialogTitle>
       <DialogContent>
-        <form
-          noValidate
-          autoComplete="off"
-          className={classes.container}
-        >
+        <form noValidate autoComplete="off" className={classes.container}>
           <FormControl className={classes.textField}>
-            <InputLabel htmlFor="add-service-selected-car">Select car</InputLabel>
+            <InputLabel htmlFor="add-service-selected-car">
+              Select car
+            </InputLabel>
             <Select
               value={selectedCar}
               onChange={e => setSelectedCar(e.target.value)}
@@ -94,7 +91,9 @@ const AddServiceDialog = props => {
               }}
             >
               {cars.map(car => (
-                <MenuItem key={car.LicensePlate} value={car}>{`${car.Make} ${car.Model}`}</MenuItem>
+                <MenuItem key={car.LicensePlate} value={car}>{`${car.Make} ${
+                  car.Model
+                }`}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -109,7 +108,9 @@ const AddServiceDialog = props => {
               }}
             >
               {serviceTypes.map(item => (
-                <MenuItem key={item} value={item}>{item}</MenuItem>
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -124,14 +125,18 @@ const AddServiceDialog = props => {
               shrink: true,
             }}
           />
-
         </form>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="default" autoFocus>
           Cancel
         </Button>
-        <Button color="primary" type="submit" disabled={isSaving} onClick={saveCar}>
+        <Button
+          color="primary"
+          type="submit"
+          disabled={isSaving}
+          onClick={saveCar}
+        >
           {isSaving ? (
             <CircularProgress className={classes.progress} />
           ) : (

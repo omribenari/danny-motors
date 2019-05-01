@@ -7,7 +7,6 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import withStyles from '@material-ui/core/styles/withStyles';
-import fire, { collections } from '../fire';
 import * as firebase from 'firebase';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ResponsiveDialog from './ResponsiveDialog';
@@ -15,6 +14,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import { FireCon } from '../common/FireCon';
 
 const styles = theme => ({
   container: {
@@ -24,7 +24,7 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    marginTop: theme.spacing.unit*2,
+    marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit,
   },
   dense: {
@@ -45,10 +45,7 @@ const AddCarDialog = props => {
   const [carImg, setCarImg] = useState('');
 
   useEffect(() => {
-    fire
-      .firestore()
-      .collection(collections.CAR_MAKE)
-      .get()
+    FireCon.getCarMake()
       .then(querySnapshot => {
         setCarsData(querySnapshot.docs.map(doc => doc.data()));
       });
@@ -57,10 +54,7 @@ const AddCarDialog = props => {
   const saveCar = () => {
     setIsSaving(true);
 
-    fire
-      .firestore()
-      .collection(collections.USERS_INFO)
-      .doc(fire.auth().currentUser.uid)
+    FireCon.UserInfo()
       .update({
         Cars: firebase.firestore.FieldValue.arrayUnion({
           Make: carMake,
@@ -85,10 +79,9 @@ const AddCarDialog = props => {
     const value = event.target.value;
     setCarMake(value);
     const make = carsData.find(m => m.Name === value);
-    if(make){
+    if (make) {
       setMakeModels(make.Models);
       console.log(make.Models);
-
     }
   };
 

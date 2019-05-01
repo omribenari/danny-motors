@@ -8,11 +8,11 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-import fire, { collections } from '../fire';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import { FireCon } from '../common/FireCon';
 
 const styles = theme => ({
   container: {
@@ -26,7 +26,7 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    marginTop: theme.spacing.unit*2,
+    marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit,
     minWidth: 200,
   },
@@ -66,13 +66,9 @@ class ServiceForm extends Component {
   }
 
   componentWillMount() {
-    fire
-      .firestore()
-      .collection(collections.CAR_MAKE)
-      .get()
-      .then(querySnapshot => {
-        this.setState({ carsData: querySnapshot.docs.map(doc => doc.data()) });
-      });
+    FireCon.getCarMake().then(querySnapshot => {
+      this.setState({ carsData: querySnapshot.docs.map(doc => doc.data()) });
+    });
   }
 
   clearForm() {}
@@ -106,22 +102,16 @@ class ServiceForm extends Component {
       isSubmitting: true,
     });
 
-    const user = fire.auth().currentUser;
+    const user = FireCon.getCurrentUser();
     if (!user) {
-      fire
-        .auth()
-        .signInAnonymously()
-        .catch(() => {
-          alert('error connecting to server');
-        });
+      FireCon.signInAnonymously().catch(() => {
+        alert('error connecting to server');
+      });
     }
 
     const data = this.getFormDataFromState();
     /* Send the form to Firebase */
-    fire
-      .firestore()
-      .collection(collections.GUEST_SERVICE_REQ)
-      .add(data)
+    FireCon.addGuestServiceReq(data)
       .then(this.handleSubmitSuccess)
       .catch(this.handleSubmitFailed);
   };

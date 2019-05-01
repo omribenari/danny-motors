@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import UserCars from '../components/UserCars';
 import UserServices from '../components/UserServices';
 import withStyles from '@material-ui/core/styles/withStyles';
-import fire, { collections } from '../fire';
+import { FireCon } from '../common/FireCon';
 
 const styles = () => ({
   root: {
@@ -34,18 +34,14 @@ class AccountSummary extends Component {
   }
 
   componentWillMount() {
-    fire
-      .firestore()
-      .collection(collections.USERS_INFO)
-      .doc(fire.auth().currentUser.uid)
-      .onSnapshot(doc => {
-        const data = doc.data();
-        this.setState({
-          userInfo: data,
-          cars: data.Cars,
-          services: data.Services,
-        });
+    FireCon.UserInfo().onSnapshot(doc => {
+      const data = doc.data();
+      this.setState({
+        userInfo: data,
+        cars: data.Cars,
+        services: data.Services,
       });
+    });
   }
 
   render() {
@@ -56,7 +52,11 @@ class AccountSummary extends Component {
       <div className={classes.root}>
         <div className={classes.cardsRow}>
           <UserCars className={classes.card} cars={cars} />
-          <UserServices className={classes.card} services={services} cars={cars} />
+          <UserServices
+            className={classes.card}
+            services={services}
+            cars={cars}
+          />
         </div>
       </div>
     );

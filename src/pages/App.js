@@ -13,9 +13,9 @@ import HomePage from './HomePage';
 import ServiceReqPage from './ServiceReqPage';
 import TermsOfServicePage from './TermsOfServicePage';
 import AccountSummary from './AccountSummary';
-import fire from '../fire';
 import withStyles from '@material-ui/core/styles/withStyles';
 import LoginPage from "./LoginPage";
+import {FireCon} from "../common/FireCon";
 
 const styles = () => ({
   appRoot: {
@@ -35,7 +35,7 @@ class App extends Component {
     const { classes } = this.props;
 
     const PrivateRoute = ({ component: Component, ...rest }) => {
-      const user = fire.auth().currentUser;
+      const user = FireCon.getCurrentUser();
       return (
         <Route
           {...rest}

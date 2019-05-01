@@ -1,13 +1,20 @@
-import React from 'react';
-import { Card, CardContent, withStyles } from '@material-ui/core';
+import React, { useState } from 'react';
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CircularProgress,
+  withStyles,
+} from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-import fire from '../fire';
 import { Redirect } from 'react-router-dom';
+import { FireCon } from '../common/FireCon';
 
 const imageUrl =
   'https://images.unsplash.com/photo-1485761954900-f9a29f318567?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80';
 
-const styles = theme => ({
+const styles = () => ({
   root: {
     flex: 1,
     display: 'flex',
@@ -24,10 +31,21 @@ const styles = theme => ({
 
 const LoginPage = props => {
   const { classes } = props;
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
-  const user = fire.auth().currentUser;
+  const handleLogin = () => {
+    setIsAuthenticating(true);
 
-  return user && !user.isAnonymous ? (
+    FireCon.login()
+      .catch(error => {
+        alert('error in google authentication');
+      })
+      .then(() => {
+        setIsAuthenticating(false);
+      });
+  };
+
+  return !isAuthenticating && FireCon.isSiginIn() ? (
     <Redirect
       to={{
         pathname: '/account-summary',
@@ -42,6 +60,15 @@ const LoginPage = props => {
             Please login using your google account to access your private data.
           </Typography>
         </CardContent>
+        <CardActions>
+          <Button onClick={handleLogin}>
+            {isAuthenticating ? (
+              <CircularProgress variant="indeterminate" />
+            ) : (
+              'Sign in with Google'
+            )}
+          </Button>
+        </CardActions>
       </Card>
     </div>
   );

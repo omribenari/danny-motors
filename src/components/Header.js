@@ -9,11 +9,11 @@ import { withStyles } from '@material-ui/core';
 import MenuDrawer from './MenuDrawer';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import fire, { collections } from '../fire';
-import * as firebase from 'firebase';
+import fire from '../fire';
 import Avatar from '@material-ui/core/Avatar';
 import { Link } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { FireCon } from '../common/FireCon';
 
 const styles = () => ({
   appbarRoot: {
@@ -46,7 +46,7 @@ class Header extends Component {
         if (user) {
           // User is signed in.
           this.setState({ user });
-          this.insertUserInfo(user);
+          this.insertUserInfo();
         } else {
           // User is signed out.
           this.setState({ user: null });
@@ -58,11 +58,8 @@ class Header extends Component {
     this.handleLogin = this.handleLogin.bind(this);
   }
 
-  insertUserInfo = user => {
-    let docRef = fire
-      .firestore()
-      .collection(collections.USERS_INFO)
-      .doc(user.uid);
+  insertUserInfo = () => {
+    let docRef = FireCon.UserInfo;
 
     docRef.get().then(docSnapshot => {
       if (!docSnapshot.exists) {
@@ -97,10 +94,7 @@ class Header extends Component {
       isAuthenticating: true,
     });
 
-    let provider = new firebase.auth.GoogleAuthProvider();
-    fire
-      .auth()
-      .signInWithRedirect(provider)
+    FireCon.login()
       .catch(error => {
         alert('error in google authentication');
       })
@@ -112,12 +106,9 @@ class Header extends Component {
   }
 
   handleLogout() {
-    fire
-      .auth()
-      .signOut()
-      .catch(function(error) {
-        alert('error on logout');
-      });
+    FireCon.logout().catch(function(error) {
+      alert('error on logout');
+    });
     this.handleClose();
   }
 
