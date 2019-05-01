@@ -13,7 +13,7 @@ export const FireCon = {
   getCurrentUser() {
     return fire.auth().currentUser;
   },
-  isSiginIn() {
+  isSignIn() {
     const user = this.getCurrentUser();
     return user && ! user.isAnonymous;
   },

@@ -21,7 +21,7 @@ const styles = theme => ({
     margin: 30,
   },
   content: {
-    padding: 30,
+    padding: 10,
   },
   fab: {
     position: 'absolute',
@@ -57,7 +57,7 @@ const UserServices = props => {
         </AppBar>
         <List className={classes.content}>
           {services.map(service => (
-            <ListItem alignItems="flex-start" key={service.LicensePlate}>
+            <ListItem alignItems="flex-start" key={service.car.LicensePlate}>
               <ServiceCard service={service} />
             </ListItem>
           ))}

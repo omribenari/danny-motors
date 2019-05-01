@@ -55,6 +55,7 @@ const AddServiceDialog = props => {
         Services: firebase.firestore.FieldValue.arrayUnion({
           car: selectedCar,
           serviceType: serviceType,
+          serviceTime: serviceTime,
         }),
       })
       .then(() => {

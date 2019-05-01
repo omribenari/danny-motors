@@ -8,7 +8,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-import { Redirect } from 'react-router-dom';
+import {Redirect, withRouter} from 'react-router-dom';
 import { FireCon } from '../common/FireCon';
 
 const imageUrl =
@@ -24,13 +24,17 @@ const styles = () => ({
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   },
-  input: {
-    display: 'none',
+  card: {
+    padding: 30,
   },
+  actions: {
+    display: 'flex',
+    justifyContent: 'center',
+  }
 });
 
 const LoginPage = props => {
-  const { classes } = props;
+  const { classes, history } = props;
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   const handleLogin = () => {
@@ -41,11 +45,18 @@ const LoginPage = props => {
         alert('error in google authentication');
       })
       .then(() => {
+        debugger;
         setIsAuthenticating(false);
+        console.log('############# push');
+
+        history.push({
+          pathname: '/account-summary',
+          state: { from: props.location },
+        });
       });
   };
 
-  return !isAuthenticating && FireCon.isSiginIn() ? (
+  return !isAuthenticating && FireCon.isSignIn() ? (
     <Redirect
       to={{
         pathname: '/account-summary',
@@ -54,13 +65,13 @@ const LoginPage = props => {
     />
   ) : (
     <div className={classes.root}>
-      <Card>
+      <Card className={classes.card}>
         <CardContent>
           <Typography variant="body1" gutterBottom>
             Please login using your google account to access your private data.
           </Typography>
         </CardContent>
-        <CardActions>
+        <CardActions className={classes.actions}>
           <Button onClick={handleLogin}>
             {isAuthenticating ? (
               <CircularProgress variant="indeterminate" />
@@ -74,4 +85,4 @@ const LoginPage = props => {
   );
 };
 
-export default withStyles(styles)(LoginPage);
+export default withRouter(withStyles(styles)(LoginPage));

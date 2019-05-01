@@ -59,7 +59,7 @@ class Header extends Component {
   }
 
   insertUserInfo = () => {
-    let docRef = FireCon.UserInfo;
+    let docRef = FireCon.UserInfo();
 
     docRef.get().then(docSnapshot => {
       if (!docSnapshot.exists) {
