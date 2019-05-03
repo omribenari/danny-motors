@@ -281,6 +281,7 @@ class ServiceForm extends Component {
           control={
             <Checkbox
               required
+              data-cy="checkbox-accept"
               checked={this.state.checkedTos}
               onChange={this.handleChange('checkedTos')}
               value="checkedG"
