@@ -42,8 +42,7 @@ class ServiceForm extends Component {
     this.state = {
       isSubmitting: false,
       isComplete: false,
-      firstName: '',
-      lastName: '',
+      name: '',
       email: '',
       phone: '',
       carMake: '',
@@ -71,7 +70,22 @@ class ServiceForm extends Component {
     });
   }
 
-  clearForm() {}
+  clearForm() {
+    this.setState({
+      isSubmitting: false,
+      isComplete: false,
+      name: '',
+      email: '',
+      phone: '',
+      carMake: '',
+      carModel: '',
+      carYear: '',
+      carKm: '',
+      carLP: '',
+      notes: '',
+      checkedTos: false,
+    });
+  }
 
   getFormDataFromState() {
     return {
