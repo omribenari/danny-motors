@@ -167,7 +167,11 @@ class ServiceForm extends Component {
     } = this.state;
 
     if (isComplete) {
-      return <div>done</div>;
+      return <div>
+        <Typography variant="h5" gutterBottom>
+          Your service request form submit successfully.
+        </Typography>
+      </div>;
     }
     return (
       <form
