@@ -21,7 +21,8 @@ describe('Service request page', () => {
     cy.get('button[type="submit"]');
   });
 
-  it.only('loads successfully', () => {
+  it.only('submit request successfully', () => {
+
     cy.get('#full-name').type('omri ben ari');
     cy.get('#email').type('omri79@gmail.com');
     cy.get('#phone').type('123123123123');
@@ -38,8 +39,14 @@ describe('Service request page', () => {
     cy.get('#car-year').type('2008');
     cy.get('#car-km').type('100000');
     cy.get('#car-lp').type('23-567-00');
-    cy.get('#note').type('khsf kfhskjdfh ksjdhfkjshdfkjshfkjsdhf sdkjfh  skjdfh skdjfhks dfksj hfkjshfkjsdhf dsk');
+    cy.get('#note').type(
+      'khsf kfhskjdfh ksjdhfkjshdfkjshfkjsdhf sdkjfh  skjdfh skdjfhks dfksj hfkjshfkjsdhf dsk',
+    );
     cy.get('span[data-cy="checkbox-accept"]').click();
+
     cy.get('button[type="submit"]').click();
+
+    cy.contains('Done');
+
   });
 });
