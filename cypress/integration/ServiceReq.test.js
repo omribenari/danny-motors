@@ -21,7 +21,7 @@ describe('Service request page', () => {
     cy.get('button[type="submit"]');
   });
 
-  it.only('submit request successfully', () => {
+  it('submit request successfully', () => {
 
     cy.get('#full-name').type('omri ben ari');
     cy.get('#email').type('omri79@gmail.com');
